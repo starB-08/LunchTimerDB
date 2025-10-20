@@ -11,6 +11,9 @@ app.use(cors());
 const port = process.env.PORT || 4000;
 const dataPath = path.join(__dirname, "data.json");
 
+const diskPath = process.env.DISK_PATH || "/mnt/disk";
+const filePath = path.join(diskPath, "data.json");
+
 app.get("/", (req, res) => {
   res.send("DB");
 });
@@ -31,6 +34,25 @@ app.get("/read", (req, res) => {
     }
   });
 });
+
+function save() {
+  fs.readFile(dataPath, "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    try {
+      fs.writeFile(filePath, JSON.stringify(data), (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+    } catch (parseErr) {
+      console.error("JSON 파싱 오류:", parseErr);
+    }
+  });
+}
 
 app.get("/write/:v", (req, res) => {
   const value = req.params.v;
