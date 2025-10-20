@@ -62,6 +62,7 @@ app.get("/write/:v", (req, res) => {
       console.error(err);
       return;
     }
+    save();
   });
 });
 
