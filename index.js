@@ -35,7 +35,15 @@ app.get("/read", (req, res) => {
   });
 });
 
-function save() {
+app.get("/write/:v", (req, res) => {
+  const value = req.params.v;
+  console.log(value);
+  fs.writeFile(dataPath, value, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+  });
   fs.readFile(dataPath, "utf8", (err, data) => {
     if (err) {
       console.error(err);
@@ -51,18 +59,6 @@ function save() {
     } catch (parseErr) {
       console.error("JSON 파싱 오류:", parseErr);
     }
-  });
-}
-
-app.get("/write/:v", (req, res) => {
-  const value = req.params.v;
-  console.log(value);
-  fs.writeFile(dataPath, value, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    save();
   });
 });
 
